@@ -1,0 +1,28 @@
+---
+source: src/ui/pr_detail.rs
+expression: terminal.backend()
+---
+"  Path                                                     +      −             "
+"A src/main.rs                                            +10     -0             "
+"M src/lib.rs                                              +5     -2             "
+"R new/foo.rs (from old/foo.rs)                            +1     -1             "
+"D removed.txt                                             +0   -100             "
+"M image.png                                               +0     -0   [binary]  "
+"A large.txt                                            +5000     -0   [oversize]"
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

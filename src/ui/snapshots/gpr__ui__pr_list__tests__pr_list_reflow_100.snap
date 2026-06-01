@@ -1,0 +1,10 @@
+---
+source: src/ui/pr_list.rs
+expression: render_at_width(100)
+---
+             # Title                                                    Author              +      −
+  ✓ ·       #1 Fix the flux capacitor                                   octocat           +10     -2
+  ✓ ·       #2 Add new widgets to dashboard                             octocat           +10     -2
+  ✓ ·       #3 Refactor core rendering engine                           octocat           +10     -2
+  ✓ ·       #4 Update dependencies                                      octocat           +10     -2
+  ✓ ·       #5 Drop legacy support                                      octocat           +10     -2

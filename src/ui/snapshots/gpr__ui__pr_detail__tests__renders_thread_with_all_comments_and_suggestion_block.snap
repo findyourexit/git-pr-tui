@@ -1,0 +1,24 @@
+---
+source: src/ui/pr_detail.rs
+expression: terminal.backend()
+---
+"#42  Add warp drive  [OPEN]  [MERGEABLE]  ✓ ·                                   "
+"                                                                                "
+"                                                                                "
+"▸ src/lib.rs:10  (2 comments)                                                   "
+"    alice: Consider this:                                                       "
+"                                                                                "
+"    [suggestion]                                                                "
+"      +let x = 1;                                                               "
+"    bob: Thanks!                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

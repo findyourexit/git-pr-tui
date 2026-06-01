@@ -1,0 +1,5 @@
+---
+source: src/ui/components/tab_strip.rs
+expression: t.backend()
+---
+" ⌂  │  acme/widgets  │  #421 fix: flaky…                                        "

@@ -1,0 +1,88 @@
+[package]
+name = "gpr"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+description = "An ergonomic TUI for viewing and managing GitHub PRs"
+authors = ["Tom Larcher <tom.larcher@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/findyourexit/git-pr-tui"
+homepage = "https://github.com/findyourexit/git-pr-tui"
+keywords = ["github", "pull-request", "tui", "terminal", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+default-run = "gpr"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "gpr"
+path = "src/main.rs"
+
+[dependencies]
+async-trait = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4", features = ["derive", "env"] }
+crossterm = { version = "0.29", features = ["event-stream"] }
+futures = "0.3"
+directories = "6"
+# Mirror octocrab's default features, with two deliberate changes that unify the
+# crypto stack on aws-lc-rs:
+#  * Swap the rustls crypto provider from ring to aws-lc-rs so the whole tree
+#    uses one provider. reqwest 0.13's `rustls` feature is aws-lc-rs only; with
+#    both providers enabled rustls 0.23 cannot pick a process default and panics
+#    at first TLS use.
+#  * Use the aws-lc-rs JWT backend (`jwt-aws-lc-rs`) instead of the default
+#    `jwt-rust-crypto`. octocrab requires exactly one JWT crypto backend;
+#    aws-lc-rs is already our rustls provider and avoids the pure-Rust `rsa`
+#    crate (RUSTSEC-2023-0071) that `jwt-rust-crypto` would pull in.
+octocrab = { version = "0.51", default-features = false, features = [
+    "follow-redirect",
+    "retry",
+    "rustls",
+    "rustls-aws-lc-rs",
+    "timeout",
+    "tracing",
+    "default-client",
+    "jwt-aws-lc-rs",
+] }
+ratatui = "0.30"
+tachyonfx = "0.25"
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "json", "gzip", "query"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Narrowed from `default-fancy`: gpr only loads the bundled default syntaxes and
+# themes (binary dumps) and highlights with fancy-regex; it never parses
+# `.sublime-syntax` / `.tmTheme` at runtime. Dropping `yaml-load` removes the
+# unmaintained `yaml-rust` (RUSTSEC-2024-0320). The required `dump-load` feature
+# still pulls `bincode`, which has no alternative in syntect 5.
+syntect = { version = "5", default-features = false, features = [
+    "parsing",
+    "default-syntaxes",
+    "default-themes",
+    "regex-fancy",
+] }
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time", "process", "fs"] }
+toml = "1"
+tracing = "0.1"
+tracing-appender = "0.2"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+unicode-width = "0.2.2"
+pulldown-cmark = { version = "0.12", default-features = false }
+
+[dev-dependencies]
+tempfile = "3"
+insta = { version = "1", features = ["yaml"] }
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+
+[lints.rust]
+unsafe_code = "deny"
+missing_debug_implementations = "warn"

@@ -1,0 +1,30 @@
+### cargo ###
+debug
+target
+
+### rustfmt ###
+**/*.rs.bk
+
+# MSVC (Windows builds) ###
+*.pdb
+
+### cargo mutants
+**/mutants.out*/
+
+### rustc ###
+rustc-ice-*.txt
+
+### RustRover ###
+.idea/
+
+### Miscellanious ###
+Cargo.lock.bak
+*.swp
+.DS_Store
+
+### Agent Harness ###
+.omo
+.pi
+.superpowers
+docs/superpowers
+.worktrees

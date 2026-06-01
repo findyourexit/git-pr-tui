@@ -1,0 +1,19 @@
+---
+source: src/ui/pr_detail.rs
+expression: terminal.backend()
+---
+"#42  Add warp drive  [OPEN]  [MERGEABLE]  ✓ ·                                   "
+"                                                                                "
+"PR body.                                                                        "
+"                                                                                "
+"                                                                                "
+"▶ src/lib.rs:5 [resolved]  (2 comments)                                         "
+"    alice: Needs fix.                                                           "
+"                                                                                "
+"    bob: Done.                                                                  "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

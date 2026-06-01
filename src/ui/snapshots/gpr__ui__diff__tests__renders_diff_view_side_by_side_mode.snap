@@ -1,0 +1,13 @@
+---
+source: src/ui/diff.rs
+assertion_line: 861
+expression: terminal.backend()
+---
+"diff --git a/x.rs b/x.rs                                    "
+"index 1111111..2222222 100644                               "
+"--- a/x.rs                                                  "
+"+++ b/x.rs                                                  "
+"@@ -1,3 +1,3 @@                                             "
+" ctx                            ctx                         "
+"-old                           +new                         "
+"                                                            "

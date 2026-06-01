@@ -1,0 +1,113 @@
+query Detail(
+  $owner: String!
+  $name: String!
+  $number: Int!
+  $afterThreads: String
+  $afterCommits: String
+  $afterTimeline: String
+) {
+  repository(owner: $owner, name: $name) {
+    nameWithOwner
+    mergeCommitAllowed
+    squashMergeAllowed
+    rebaseMergeAllowed
+    pullRequest(number: $number) {
+      number title body bodyHTML state isDraft updatedAt createdAt
+      mergeStateStatus
+      reviewDecision
+      additions deletions changedFiles
+      totalCommentsCount
+      headRefOid baseRefOid
+      baseRefName headRefName
+      author { login }
+      mergeCommit { oid }
+      assignees(first: 20) { nodes { login } }
+      reviewRequests(first: 20) {
+        nodes {
+          requestedReviewer {
+            ... on User { login }
+            ... on Team { name }
+          }
+        }
+      }
+      labels(first: 50) { nodes { name color } }
+      commits(first: 50, after: $afterCommits) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          commit {
+            oid
+            messageHeadline
+            authoredDate
+            pushedDate
+            author { user { login } }
+            statusCheckRollup { state }
+          }
+        }
+      }
+      reviewThreads(first: 20, after: $afterThreads) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id isResolved isOutdated
+          path
+          line startLine
+          originalLine originalStartLine
+          diffSide startDiffSide
+          comments(first: 20) {
+            pageInfo { hasNextPage endCursor }
+            nodes {
+              id
+              author { login }
+              body
+              createdAt
+              position originalPosition
+              commit { oid }
+              originalCommit { oid }
+            }
+          }
+        }
+      }
+      timelineItems(first: 50, after: $afterTimeline, itemTypes: [
+        PULL_REQUEST_COMMIT,
+        ISSUE_COMMENT,
+        PULL_REQUEST_REVIEW,
+        HEAD_REF_FORCE_PUSHED_EVENT,
+        MERGED_EVENT, CLOSED_EVENT, REOPENED_EVENT
+      ]) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          __typename
+          ... on PullRequestCommit {
+            commit {
+              oid
+              messageHeadline
+              pushedDate
+              author { user { login } name }
+            }
+          }
+          ... on IssueComment {
+            id author { login } body createdAt
+          }
+          ... on PullRequestReview {
+            id author { login } state body submittedAt
+          }
+          ... on HeadRefForcePushedEvent {
+            createdAt actor { login }
+            beforeCommit { oid }
+            afterCommit { oid }
+          }
+          ... on MergedEvent {
+            createdAt actor { login }
+            commit { oid }
+          }
+          ... on ClosedEvent {
+            createdAt actor { login }
+          }
+          ... on ReopenedEvent {
+            createdAt actor { login }
+          }
+        }
+      }
+    }
+  }
+  rateLimit { limit remaining resetAt }
+}

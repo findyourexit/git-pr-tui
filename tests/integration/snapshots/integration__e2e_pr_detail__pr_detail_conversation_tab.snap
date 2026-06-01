@@ -1,0 +1,28 @@
+---
+source: tests/integration/e2e_pr_detail.rs
+expression: terminal.backend()
+---
+"#101  feat: add export  [OPEN]  [MERGEABLE]  ✓ ·                                "
+"                                                                                "
+"Adds CSV export to the report screen.                                           "
+"                                                                                "
+"                                                                                "
+"● alice 1mo ago  commit abc1234  feat: add export                               "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

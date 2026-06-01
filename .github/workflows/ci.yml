@@ -1,0 +1,48 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+env:
+  # aws-lc-sys (pulled in by the rustls `aws-lc-rs` provider) assembles its
+  # crypto with NASM on Windows MSVC. Use the crate's checked-in prebuilt NASM
+  # objects so the Windows runner needs no separate NASM install. The variable
+  # is ignored on Linux/macOS.
+  AWS_LC_SYS_PREBUILT_NASM: "1"
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test --all-targets
+      - run: cargo test --doc
+      - run: cargo build --release
+
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.88.0
+      - uses: Swatinem/rust-cache@v2
+      # Verify the crate still builds on the declared minimum supported
+      # Rust version (Cargo.toml `rust-version`).
+      - run: cargo build
+
+  deny:
+    name: cargo-deny (advisories + licenses)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2

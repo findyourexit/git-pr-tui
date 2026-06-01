@@ -1,0 +1,9 @@
+---
+source: src/ui/pr_list.rs
+expression: terminal.backend()
+---
+"No PRs match is:merged.                                                         "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

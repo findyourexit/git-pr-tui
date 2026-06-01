@@ -1,0 +1,10 @@
+---
+source: src/ui/pr_list.rs
+expression: render_at_width(60)
+---
+             # Title            Author              +      −
+  ✓ ·       #1 Fix the flux ca… octocat           +10     -2
+  ✓ ·       #2 Add new widgets… octocat           +10     -2
+  ✓ ·       #3 Refactor core r… octocat           +10     -2
+  ✓ ·       #4 Update dependen… octocat           +10     -2
+  ✓ ·       #5 Drop legacy sup… octocat           +10     -2

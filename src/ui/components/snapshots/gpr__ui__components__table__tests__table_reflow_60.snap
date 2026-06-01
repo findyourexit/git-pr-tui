@@ -1,0 +1,7 @@
+---
+source: src/ui/components/table.rs
+expression: render_at(60)
+---
+   # Title                                          Author  
+   1 A very long pull request title that should el… octocat 
+   2 short                                          hubot

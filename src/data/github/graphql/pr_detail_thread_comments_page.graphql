@@ -1,0 +1,18 @@
+query DetailThreadCommentsPage($threadId: ID!, $after: String) {
+  node(id: $threadId) {
+    ... on PullRequestReviewThread {
+      comments(first: 20, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          author { login }
+          body
+          createdAt
+          position originalPosition
+          commit { oid }
+          originalCommit { oid }
+        }
+      }
+    }
+  }
+}

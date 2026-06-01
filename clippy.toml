@@ -1,0 +1,5 @@
+# See https://doc.rust-lang.org/clippy/lint_configuration.html
+
+# Keep Clippy's suggestions (and the `incompatible_msrv` lint) compatible with
+# the crate's minimum supported Rust version (Cargo.toml `rust-version`).
+msrv = "1.88"

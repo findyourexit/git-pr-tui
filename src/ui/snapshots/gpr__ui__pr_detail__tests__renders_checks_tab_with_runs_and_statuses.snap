@@ -1,0 +1,24 @@
+---
+source: src/ui/pr_detail.rs
+expression: terminal.backend()
+---
+"Check Runs                                                                      "
+"    Name                   App    Result      Details                           "
+"✓   build                  ci-bot success                                       "
+"✗   tests                  ci-bot failure     https://example.com/tests         "
+"◐   lint                   ci-bot in progress                                   "
+"○   deploy                 ci-bot queued                                        "
+"                                                                                "
+"Commit Statuses                                                                 "
+"    Context                     State   Details                                 "
+"✓   ci/circleci                 success                                         "
+"✗   ci/heroku                   failure Deploy failed: timeout                  "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

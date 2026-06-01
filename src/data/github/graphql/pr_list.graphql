@@ -1,0 +1,21 @@
+query PrList($owner: String!, $name: String!, $cursor: String) {
+  repository(owner: $owner, name: $name) {
+    pullRequests(first: 30, after: $cursor, states: [OPEN, CLOSED, MERGED], orderBy: {field: UPDATED_AT, direction: DESC}) {
+      pageInfo { hasNextPage endCursor }
+      nodes {
+        number title state isDraft updatedAt createdAt
+        author { login }
+        baseRefName headRefName
+        headRefOid
+        additions deletions changedFiles
+        totalCommentsCount
+        reviewDecision
+        mergeStateStatus
+        repository { nameWithOwner }
+        labels(first: 10) { nodes { name color } }
+        commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
+      }
+    }
+  }
+  rateLimit { limit remaining resetAt }
+}

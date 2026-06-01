@@ -1,0 +1,33 @@
+query DetailThreadsPage(
+  $owner: String!
+  $name: String!
+  $number: Int!
+  $after: String
+) {
+  repository(owner: $owner, name: $name) {
+    pullRequest(number: $number) {
+      reviewThreads(first: 20, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id isResolved isOutdated
+          path
+          line startLine
+          originalLine originalStartLine
+          diffSide startDiffSide
+          comments(first: 20) {
+            pageInfo { hasNextPage endCursor }
+            nodes {
+              id
+              author { login }
+              body
+              createdAt
+              position originalPosition
+              commit { oid }
+              originalCommit { oid }
+            }
+          }
+        }
+      }
+    }
+  }
+}

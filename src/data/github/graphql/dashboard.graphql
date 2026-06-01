@@ -1,0 +1,51 @@
+query Dashboard {
+  reviewRequested: search(query: "is:open is:pr review-requested:@me archived:false", type: ISSUE, first: 30) {
+    pageInfo { hasNextPage endCursor }
+    nodes { ... on PullRequest {
+      number title state isDraft updatedAt createdAt
+      author { login }
+      baseRefName headRefName
+      headRefOid
+      additions deletions changedFiles
+      totalCommentsCount
+      reviewDecision
+      mergeStateStatus
+      repository { nameWithOwner }
+      labels(first: 10) { nodes { name color } }
+      commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
+    } }
+  }
+  authored: search(query: "is:open is:pr author:@me archived:false", type: ISSUE, first: 30) {
+    pageInfo { hasNextPage endCursor }
+    nodes { ... on PullRequest {
+      number title state isDraft updatedAt createdAt
+      author { login }
+      baseRefName headRefName
+      headRefOid
+      additions deletions changedFiles
+      totalCommentsCount
+      reviewDecision
+      mergeStateStatus
+      repository { nameWithOwner }
+      labels(first: 10) { nodes { name color } }
+      commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
+    } }
+  }
+  assigned: search(query: "is:open is:pr assignee:@me archived:false", type: ISSUE, first: 30) {
+    pageInfo { hasNextPage endCursor }
+    nodes { ... on PullRequest {
+      number title state isDraft updatedAt createdAt
+      author { login }
+      baseRefName headRefName
+      headRefOid
+      additions deletions changedFiles
+      totalCommentsCount
+      reviewDecision
+      mergeStateStatus
+      repository { nameWithOwner }
+      labels(first: 10) { nodes { name color } }
+      commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
+    } }
+  }
+  rateLimit { limit remaining resetAt }
+}

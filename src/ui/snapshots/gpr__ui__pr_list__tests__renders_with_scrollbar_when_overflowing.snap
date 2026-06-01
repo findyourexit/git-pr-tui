@@ -1,0 +1,14 @@
+---
+source: src/ui/pr_list.rs
+expression: terminal.backend()
+---
+"             # Title                                Author              +      █"
+"  ✓ ·       #1 PR number 1                          octocat           +10     -█"
+"  ✓ ·       #2 PR number 2                          octocat           +10     -█"
+"  ✓ ·       #3 PR number 3                          octocat           +10     -║"
+"  ✓ ·       #4 PR number 4                          octocat           +10     -║"
+"  ✓ ·       #5 PR number 5                          octocat           +10     -║"
+"  ✓ ·       #6 PR number 6                          octocat           +10     -║"
+"  ✓ ·       #7 PR number 7                          octocat           +10     -║"
+"  ✓ ·       #8 PR number 8                          octocat           +10     -║"
+"  ✓ ·       #9 PR number 9                          octocat           +10     -║"

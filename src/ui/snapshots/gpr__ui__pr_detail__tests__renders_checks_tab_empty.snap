@@ -1,0 +1,10 @@
+---
+source: src/ui/pr_detail.rs
+assertion_line: 788
+expression: terminal.backend()
+---
+"No checks reported.                                                             "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

@@ -1,0 +1,14 @@
+[
+  {
+    "sha": "f0961571b1041d18381a4a3958a319291d55be1e",
+    "filename": "README.md",
+    "status": "modified",
+    "additions": 2,
+    "deletions": 0,
+    "changes": 2,
+    "blob_url": "https://github.com/cli/cli/blob/a5be6be4908a18a25c6a0f52fd2b4daa7b29e0d2/README.md",
+    "raw_url": "https://github.com/cli/cli/raw/a5be6be4908a18a25c6a0f52fd2b4daa7b29e0d2/README.md",
+    "contents_url": "https://api.github.com/repos/cli/cli/contents/README.md?ref=a5be6be4908a18a25c6a0f52fd2b4daa7b29e0d2",
+    "patch": "@@ -65,6 +65,8 @@ For information on all pre-installed tools, see [`actions/runner-images`](https:\n \n ### Verification of binaries\n \n+Starting with v2.93.0, releases of `gh` are published as immutable releases. For more information, see [Immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases).\n+\n Since version 2.50.0, `gh` has been producing [Build Provenance Attestation](https://github.blog/changelog/2024-06-25-artifact-attestations-is-generally-available/), enabling a cryptographically verifiable paper-trail back to the origin GitHub repository, git revision, and build instructions used. The build provenance attestations are signed and rely on Public Good [Sigstore](https://www.sigstore.dev/) for PKI.\n \n There are two common ways to verify a downloaded release, depending on whether `gh` is already installed or not. If `gh` is installed, it's trivial to verify a new release:"
+  }
+]

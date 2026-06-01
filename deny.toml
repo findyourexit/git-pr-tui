@@ -1,0 +1,43 @@
+# cargo-deny configuration — https://embarkstudios.github.io/cargo-deny/
+#
+# Enforced in CI by the `deny` job (.github/workflows/ci.yml).
+# Validate locally with: cargo deny check
+
+[graph]
+targets = []
+all-features = true
+
+[advisories]
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/rustsec/advisory-db"]
+ignore = [
+    # `bincode` 1.x unmaintained — pulled in transitively by `syntect` via its
+    # required `dump-load` feature, used to read the bundled syntax/theme dumps.
+    # No known vulnerability and no alternative in syntect 5. (The `rsa` and
+    # `yaml-rust` advisories were removed at the source — see Cargo.toml.)
+    "RUSTSEC-2025-0141",
+]
+
+[licenses]
+# Allowlist derived from the current dependency tree (`cargo deny check licenses`).
+# All entries are permissive or weak-copyleft licenses compatible with this
+# MIT-licensed crate. Unusual entries are annotated with the crate that pulls
+# them in so future audits can re-verify.
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-3-Clause",        # curve25519-dalek, ed25519-dalek, subtle, aws-lc-sys
+    "ISC",                 # rustls-webpki, untrusted, ring, aws-lc-rs
+    "MPL-2.0",             # option-ext (transitive via `directories`)
+    "Unicode-3.0",
+    "Unicode-DFS-2016",    # finl_unicode, wezterm-bidi
+    "Zlib",
+    "CDLA-Permissive-2.0", # webpki-root-certs
+    "WTFPL",               # terminfo (transitive via the TUI stack)
+]
+
+[bans]
+multiple-versions = "warn"
+
+[sources]
+unknown-registry = "deny"

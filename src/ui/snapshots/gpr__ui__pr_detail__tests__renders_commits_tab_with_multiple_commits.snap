@@ -1,0 +1,14 @@
+---
+source: src/ui/pr_detail.rs
+expression: terminal.backend()
+---
+"SHA     Summary                                                   Author        "
+"abc1234 Add feature X                                             alice         "
+"def7654 Fix bug in Y                                              bob           "
+"9876543 Refactor Z                                                carol         "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "
+"                                                                                "

@@ -23,3 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable keymap, theme (dark/light), animation intensity, and background
   refresh cadence via `config.toml`.
 - GitHub authentication delegated to the `gh` CLI; in-memory cache only.
+- Offline demo mode (`gpr --demo`) that runs the full TUI against built-in
+  sample data, with no `gh` token or network access required.
+- Pre-built release binaries for macOS, Linux, and Windows, plus Homebrew tap
+  installation (`brew install findyourexit/tap/gpr`), driven by a tag-triggered
+  release workflow.

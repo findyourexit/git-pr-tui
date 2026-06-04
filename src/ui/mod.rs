@@ -11,6 +11,7 @@ pub mod highlight;
 pub mod layout;
 pub mod log_view;
 pub mod markdown;
+pub mod modals;
 pub mod palette;
 pub mod pr_detail;
 pub mod pr_list;

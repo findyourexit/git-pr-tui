@@ -118,12 +118,23 @@ pub fn render_app(f: &mut Frame, state: &AppState, theme: &Theme) {
         .collect();
     render_footer(f, status_area, &hints, theme);
 
-    // Overlay z-order: toast → composer → help → palette → action_menu → log_view.
+    // Overlay z-order: toast → composer → write modals → help → palette →
+    // action_menu → log_view.
     if let Some(toast) = state.toast.as_ref() {
         render_toast(f, area, toast, theme);
     }
     if let Some(composer) = state.composer.as_ref() {
         render_composer(f, area, composer, theme);
+    }
+    // PR-detail write modals (mutually exclusive in practice).
+    if let Some(modal) = state.review_modal.as_ref() {
+        crate::ui::modals::render_review_modal(f, area, modal, theme);
+    }
+    if let Some(modal) = state.merge_modal.as_ref() {
+        crate::ui::modals::render_merge_modal(f, area, modal, theme);
+    }
+    if let Some(confirm) = state.close_reopen_confirm.as_ref() {
+        crate::ui::modals::render_close_reopen_confirm(f, area, confirm, theme);
     }
     if state.help_overlay {
         render_help_for_view(f, area, state, theme);
@@ -181,19 +192,64 @@ fn render_pr_list_view(
     repo: &crate::data::models::Repo,
     theme: &Theme,
 ) {
+    use crate::app::state::{PR_LIST_FILTER_OPTIONS, PR_LIST_SORT_OPTIONS};
+
     let empty: Vec<crate::data::models::PrSummary> = Vec::new();
-    let rows = state.pr_lists.get(repo).unwrap_or(&empty);
+    let all_rows = state.pr_lists.get(repo).unwrap_or(&empty);
+
+    let tab_state = &state.active_tab().state;
+    let search = tab_state.search.as_ref();
+    let filter_modal = tab_state.filter_modal.as_ref();
+    let sort_modal = tab_state.sort_modal.as_ref();
+
+    // While the search input is open, incrementally filter the visible rows by
+    // the query (display-only — the selection and fetched data are untouched).
+    let filtered: Vec<crate::data::models::PrSummary>;
+    let rows: &[crate::data::models::PrSummary] = if let Some(s) = search {
+        filtered = crate::app::update::search_filter_pr_rows(all_rows, &s.query)
+            .into_iter()
+            .cloned()
+            .collect();
+        &filtered
+    } else {
+        all_rows
+    };
+
     let selected = match *state.selection() {
         crate::app::state::Selection::PrListRow(i) => i,
         _ => 0,
     };
+
+    // Reserve a one-line search bar at the foot of the list while searching.
+    let (list_area, search_area) = if search.is_some() {
+        let [list_a, bar_a] =
+            Layout::vertical([Constraint::Min(0), Constraint::Length(1)]).areas(area);
+        (list_a, Some(bar_a))
+    } else {
+        (area, None)
+    };
+
     let view = PrListView {
         rows,
         selected,
         loading: state.pr_list_loading.contains(repo),
         filter_label: None,
     };
-    render_pr_list(f, area, &view, theme);
+    render_pr_list(f, list_area, &view, theme);
+
+    if let (Some(s), Some(bar)) = (search, search_area) {
+        crate::ui::pr_list::render_search_bar(f, bar, &s.query, theme);
+    }
+
+    // Filter / sort pickers layer above the list (mutually exclusive in use).
+    if let Some(modal) = filter_modal {
+        let labels: Vec<&str> = PR_LIST_FILTER_OPTIONS.iter().map(|(l, _)| *l).collect();
+        crate::ui::pr_list::render_list_picker(f, area, " Filter ", &labels, modal.selected, theme);
+    }
+    if let Some(modal) = sort_modal {
+        let labels: Vec<&str> = PR_LIST_SORT_OPTIONS.iter().map(|(l, _)| *l).collect();
+        crate::ui::pr_list::render_list_picker(f, area, " Sort ", &labels, modal.selected, theme);
+    }
 }
 
 fn render_pr_detail_view(
@@ -378,6 +434,176 @@ mod tests {
         assert!(
             rendered.contains("dashboard"),
             "expected palette static command, got:\n{rendered}"
+        );
+    }
+
+    fn pr_list_row(number: u64, title: &str) -> crate::data::models::PrSummary {
+        use crate::data::models::{ChecksRollup, Mergeable, PrId, PrState, PrSummary, Repo};
+        use chrono::{TimeZone, Utc};
+        PrSummary {
+            id: PrId {
+                repo: Repo {
+                    owner: "acme".into(),
+                    name: "widgets".into(),
+                },
+                number,
+            },
+            title: title.into(),
+            author: "octocat".into(),
+            state: PrState::Open,
+            is_draft: false,
+            base: "main".into(),
+            head: "f".into(),
+            additions: 1,
+            deletions: 0,
+            changed_files: 1,
+            comments: 0,
+            review_decision: None,
+            checks: ChecksRollup::None,
+            mergeable: Mergeable::Clean,
+            labels: vec![],
+            updated_at: Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0).unwrap(),
+            created_at: Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0).unwrap(),
+        }
+    }
+
+    fn pr_list_state() -> AppState {
+        use crate::data::models::Repo;
+        let repo = Repo {
+            owner: "acme".into(),
+            name: "widgets".into(),
+        };
+        let mut state = AppState::default();
+        crate::app::seed_workspace_from_view(&mut state, View::PrList { repo: repo.clone() });
+        state.pr_lists.insert(
+            repo,
+            vec![
+                pr_list_row(1, "fix: retry backoff"),
+                pr_list_row(2, "feat: streaming export"),
+                pr_list_row(3, "docs: rate limits"),
+            ],
+        );
+        state
+    }
+
+    #[test]
+    fn renders_filter_modal_over_pr_list() {
+        let mut state = pr_list_state();
+        state.active_tab_mut().state.filter_modal =
+            Some(crate::app::state::FilterModalState { selected: 0 });
+        let mut t = Terminal::new(TestBackend::new(80, 24)).unwrap();
+        t.draw(|f| render_app(f, &state, &Theme::dark())).unwrap();
+        let rendered = buf_to_string(&t);
+        assert!(
+            rendered.contains("Filter") && rendered.contains("is:open"),
+            "filter picker must render its title and options, got:\n{rendered}"
+        );
+    }
+
+    #[test]
+    fn renders_sort_modal_over_pr_list() {
+        let mut state = pr_list_state();
+        state.active_tab_mut().state.sort_modal =
+            Some(crate::app::state::SortModalState { selected: 0 });
+        let mut t = Terminal::new(TestBackend::new(80, 24)).unwrap();
+        t.draw(|f| render_app(f, &state, &Theme::dark())).unwrap();
+        let rendered = buf_to_string(&t);
+        assert!(
+            rendered.contains("Sort") && rendered.contains("sort:updated-desc"),
+            "sort picker must render its title and options, got:\n{rendered}"
+        );
+    }
+
+    #[test]
+    fn renders_search_bar_and_filters_rows() {
+        let mut state = pr_list_state();
+        state.active_tab_mut().state.search = Some(crate::app::state::SearchState {
+            query: "retry".into(),
+        });
+        let mut t = Terminal::new(TestBackend::new(80, 24)).unwrap();
+        t.draw(|f| render_app(f, &state, &Theme::dark())).unwrap();
+        let rendered = buf_to_string(&t);
+        assert!(
+            rendered.contains("/retry"),
+            "search bar must show the query, got:\n{rendered}"
+        );
+        assert!(
+            rendered.contains("retry backoff"),
+            "matching row must remain, got:\n{rendered}"
+        );
+        assert!(
+            !rendered.contains("streaming export"),
+            "non-matching rows must be filtered out, got:\n{rendered}"
+        );
+    }
+
+    fn modal_pr_id() -> crate::data::models::PrId {
+        crate::data::models::PrId {
+            repo: crate::data::models::Repo {
+                owner: "acme".into(),
+                name: "widgets".into(),
+            },
+            number: 42,
+        }
+    }
+
+    fn render_app_string(state: &AppState) -> String {
+        let mut t = Terminal::new(TestBackend::new(80, 24)).unwrap();
+        t.draw(|f| render_app(f, state, &Theme::dark())).unwrap();
+        buf_to_string(&t)
+    }
+
+    #[test]
+    fn renders_review_modal_overlay() {
+        let state = AppState {
+            review_modal: Some(crate::app::state::ReviewModalState {
+                pr_id: modal_pr_id(),
+                selected: 0,
+                body: String::new(),
+            }),
+            ..AppState::default()
+        };
+        let rendered = render_app_string(&state);
+        assert!(
+            rendered.contains("Submit Review") && rendered.contains("Approve"),
+            "review modal must render, got:\n{rendered}"
+        );
+    }
+
+    #[test]
+    fn renders_merge_modal_overlay() {
+        use crate::data::models::MergeMethod;
+        let state = AppState {
+            merge_modal: Some(crate::app::state::MergeModalState {
+                pr_id: modal_pr_id(),
+                head_sha: "deadbeef".into(),
+                kind: crate::app::state::MergeModalKind::MethodPicker {
+                    methods: vec![MergeMethod::Squash, MergeMethod::Merge],
+                    selected: 0,
+                },
+            }),
+            ..AppState::default()
+        };
+        let rendered = render_app_string(&state);
+        assert!(
+            rendered.contains("Merge") && rendered.contains("Squash and merge"),
+            "merge modal must render, got:\n{rendered}"
+        );
+    }
+
+    #[test]
+    fn renders_close_reopen_confirm_overlay() {
+        let state = AppState {
+            close_reopen_confirm: Some(crate::app::state::CloseReopenConfirmState {
+                pr_id: modal_pr_id(),
+                action: crate::app::state::CloseReopenAction::Close,
+            }),
+            ..AppState::default()
+        };
+        let rendered = render_app_string(&state);
+        assert!(
+            rendered.contains("Close pull request #42?"),
+            "close confirm must render, got:\n{rendered}"
         );
     }
 

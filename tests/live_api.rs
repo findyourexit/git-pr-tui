@@ -3,8 +3,8 @@
 //!
 //! Requires `gh` installed and `gh auth login` completed.
 
-use gpr::data::github::GitHubClient;
-use gpr::data::github::octocrab_impl::{OctocrabConfig, OctocrabGitHubClient};
+use gprr::data::github::GitHubClient;
+use gprr::data::github::octocrab_impl::{OctocrabConfig, OctocrabGitHubClient};
 
 #[tokio::test]
 #[ignore = "hits live GitHub API; run manually"]

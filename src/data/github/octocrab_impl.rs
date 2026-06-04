@@ -192,7 +192,7 @@ impl Default for OctocrabConfig {
     fn default() -> Self {
         Self {
             timeout: Duration::from_secs(10),
-            user_agent: "gpr/0.1.0".into(),
+            user_agent: concat!("gprr/", env!("CARGO_PKG_VERSION")).into(),
         }
     }
 }

@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in `gpr`, please report it
+If you discover a security vulnerability in `gprr`, please report it
 responsibly. **Do not open a public issue.**
 
 Instead, please use one of the following methods:
@@ -34,7 +34,7 @@ running the most recent version.
 
 ## A Note on Credentials
 
-`gpr` performs **no** authentication of its own. It shells out to the
+`gprr` performs **no** authentication of its own. It shells out to the
 `gh` CLI (`gh auth token`) for a GitHub token at call time and never stores,
 caches, or transmits credentials itself. There is no OAuth flow and no
 `GITHUB_TOKEN` environment fallback. Token lifecycle and storage are owned

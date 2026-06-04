@@ -6,14 +6,14 @@
 #
 # Targets a stable public repo with rich PR activity by default.
 # Override via env vars:
-#   GPR_FIXTURE_REPO   default: cli/cli
-#   GPR_FIXTURE_PR     default: 1   (override to a recently merged PR with reviews + checks)
-#   GPR_FIXTURE_DIR    default: tests/fixtures/api
+#   GPRR_FIXTURE_REPO   default: cli/cli
+#   GPRR_FIXTURE_PR     default: 1   (override to a recently merged PR with reviews + checks)
+#   GPRR_FIXTURE_DIR    default: tests/fixtures/api
 set -euo pipefail
 
-REPO="${GPR_FIXTURE_REPO:-cli/cli}"
-PR="${GPR_FIXTURE_PR:-1}"
-OUT="${GPR_FIXTURE_DIR:-tests/fixtures/api}"
+REPO="${GPRR_FIXTURE_REPO:-cli/cli}"
+PR="${GPRR_FIXTURE_PR:-1}"
+OUT="${GPRR_FIXTURE_DIR:-tests/fixtures/api}"
 mkdir -p "$OUT"
 
 OWNER="${REPO%%/*}"

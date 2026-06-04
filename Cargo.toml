@@ -1,6 +1,6 @@
 [package]
-name = "gpr"
-version = "0.1.0"
+name = "gprr"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.88"
 description = "An ergonomic TUI for viewing and managing GitHub PRs"
@@ -11,13 +11,13 @@ repository = "https://github.com/findyourexit/git-pr-tui"
 homepage = "https://github.com/findyourexit/git-pr-tui"
 keywords = ["github", "pull-request", "tui", "terminal", "cli"]
 categories = ["command-line-utilities", "development-tools"]
-default-run = "gpr"
+default-run = "gprr"
 
 [lib]
 path = "src/lib.rs"
 
 [[bin]]
-name = "gpr"
+name = "gprr"
 path = "src/main.rs"
 
 [dependencies]
@@ -52,7 +52,7 @@ tachyonfx = "0.25"
 reqwest = { version = "0.13", default-features = false, features = ["rustls", "json", "gzip", "query"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-# Narrowed from `default-fancy`: gpr only loads the bundled default syntaxes and
+# Narrowed from `default-fancy`: gprr only loads the bundled default syntaxes and
 # themes (binary dumps) and highlights with fancy-regex; it never parses
 # `.sublime-syntax` / `.tmTheme` at runtime. Dropping `yaml-load` removes the
 # unmaintained `yaml-rust` (RUSTSEC-2024-0320). The required `dump-load` feature

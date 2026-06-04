@@ -9,13 +9,13 @@
 use chrono::TimeZone;
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use gpr::app::App;
-use gpr::app::effect::{DataEvent, Effect};
-use gpr::app::event::AppEvent;
-use gpr::app::state::{Selection, View};
-use gpr::app::update::update;
-use gpr::data::github::fake::FakeFixtures;
-use gpr::data::models::{ChecksRollup, Mergeable, PrId, PrState, PrSummary, Repo, ReviewDecision};
+use gprr::app::App;
+use gprr::app::effect::{DataEvent, Effect};
+use gprr::app::event::AppEvent;
+use gprr::app::state::{Selection, View};
+use gprr::app::update::update;
+use gprr::data::github::fake::FakeFixtures;
+use gprr::data::models::{ChecksRollup, Mergeable, PrId, PrState, PrSummary, Repo, ReviewDecision};
 
 use super::harness::fake_with;
 
@@ -61,7 +61,7 @@ async fn pr_list_happy_path_with_pagination() {
     };
     let client = fake_with(fixtures);
     let mut app = App::new(client.clone());
-    gpr::app::seed_workspace_from_view(&mut app.state, View::PrList { repo: repo.clone() });
+    gprr::app::seed_workspace_from_view(&mut app.state, View::PrList { repo: repo.clone() });
 
     // ── Page 1 ────────────────────────────────────────────────────────────
     let effects = update(&mut app.state, &AppEvent::Tick);

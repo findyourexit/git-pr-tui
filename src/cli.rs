@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 
-/// CLI for `gpr` — the GitHub PR TUI.
+/// CLI for `gprr` — the GitHub PR TUI.
 ///
 /// All flags are optional. Behaviour:
 ///   * `--dashboard` and `--pr <N>` force the landing view; `--pr` requires
@@ -11,7 +11,7 @@ use clap::Parser;
 ///   * `--debug` / `--trace` and `--no-color` affect logging/rendering.
 ///   * `--config <path>` overrides the config file location.
 #[derive(Debug, Parser, PartialEq, Eq)]
-#[command(name = "gpr", version, about = "TUI for managing GitHub PRs")]
+#[command(name = "gprr", version, about = "TUI for managing GitHub PRs")]
 #[allow(clippy::struct_excessive_bools)]
 pub struct Cli {
     /// Open the personal dashboard regardless of cwd.
@@ -38,7 +38,7 @@ pub struct Cli {
     #[arg(long)]
     pub no_color: bool,
 
-    /// Override the config file location (default: `$XDG_CONFIG_HOME/gpr/config.toml`).
+    /// Override the config file location (default: `$XDG_CONFIG_HOME/gprr/config.toml`).
     #[arg(long, value_name = "PATH")]
     pub config: Option<PathBuf>,
 
@@ -84,7 +84,7 @@ mod tests {
     use super::*;
 
     fn parse(args: &[&str]) -> Cli {
-        Cli::try_parse_from(std::iter::once("gpr").chain(args.iter().copied())).expect("parse")
+        Cli::try_parse_from(std::iter::once("gprr").chain(args.iter().copied())).expect("parse")
     }
 
     #[test]
@@ -124,7 +124,7 @@ mod tests {
 
     #[test]
     fn positional_without_slash_errors() {
-        let res = Cli::try_parse_from(["gpr", "acme-widgets"]);
+        let res = Cli::try_parse_from(["gprr", "acme-widgets"]);
         assert!(res.is_err(), "missing slash must error");
     }
 
@@ -142,16 +142,16 @@ mod tests {
 
     #[test]
     fn config_flag_takes_path() {
-        let cli = parse(&["--config", "/tmp/gpr.toml"]);
+        let cli = parse(&["--config", "/tmp/gprr.toml"]);
         assert_eq!(
             cli.config.as_deref(),
-            Some(std::path::Path::new("/tmp/gpr.toml"))
+            Some(std::path::Path::new("/tmp/gprr.toml"))
         );
     }
 
     #[test]
     fn dashboard_and_pr_are_mutually_exclusive() {
-        let res = Cli::try_parse_from(["gpr", "--dashboard", "--pr", "1"]);
+        let res = Cli::try_parse_from(["gprr", "--dashboard", "--pr", "1"]);
         assert!(res.is_err(), "dashboard + --pr must conflict");
     }
 }

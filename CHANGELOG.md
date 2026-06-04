@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-06-04
+### Changed
+
+- Renamed the binary, crate, and Homebrew formula from `gpr` to `gprr` to avoid
+  a collision with Oh My Zsh's `gpr` alias for `git pull --rebase`. This also
+  moves the config directory to `~/.config/gprr/`, the log directory to
+  `$XDG_DATA_HOME/gprr/log/`, and renames the `GPR_LOG` / `GPR_FIXTURE_*`
+  environment variables to `GPRR_LOG` / `GPRR_FIXTURE_*`.
 
 ### Added
 
@@ -25,8 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable keymap, theme (dark/light), animation intensity, and background
   refresh cadence via `config.toml`.
 - GitHub authentication delegated to the `gh` CLI; in-memory cache only.
-- Offline demo mode (`gpr --demo`) that runs the full TUI against built-in
+- Offline demo mode (`gprr --demo`) that runs the full TUI against built-in
   sample data, with no `gh` token or network access required.
 - Pre-built release binaries for macOS, Linux, and Windows, plus Homebrew tap
-  installation (`brew install findyourexit/tap/gpr`), driven by a tag-triggered
+  installation (`brew install findyourexit/tap/gprr`), driven by a tag-triggered
   release workflow.

@@ -3,14 +3,14 @@
 //! back as `DataEvent::WriteCompleted`, and assert the resulting
 //! `PendingStatus` + emitted effects.
 
-use gpr::app::effect::{DataEvent, Effect, WriteRequest};
-use gpr::app::event::AppEvent;
-use gpr::app::state::{AppState, PendingStatus, PendingWrite, ToastKind};
-use gpr::app::update::update;
-use gpr::data::cache::WriteKind;
-use gpr::data::github::GitHubError;
-use gpr::data::github::fake::{FakeFixtures, WriteOp};
-use gpr::data::models::{PrId, Repo};
+use gprr::app::effect::{DataEvent, Effect, WriteRequest};
+use gprr::app::event::AppEvent;
+use gprr::app::state::{AppState, PendingStatus, PendingWrite, ToastKind};
+use gprr::app::update::update;
+use gprr::data::cache::WriteKind;
+use gprr::data::github::GitHubError;
+use gprr::data::github::fake::{FakeFixtures, WriteOp};
+use gprr::data::models::{PrId, Repo};
 
 use super::harness::fake_with;
 
@@ -34,7 +34,7 @@ fn pending(kind: WriteKind, request: WriteRequest) -> PendingWrite {
 }
 
 async fn execute_post_pr_comment(
-    client: &gpr::data::SharedGitHubClient,
+    client: &gprr::data::SharedGitHubClient,
     id: &PrId,
     body: &str,
 ) -> Result<(), GitHubError> {
@@ -161,7 +161,7 @@ async fn write_recovery_stale_head_sha_keeps_pending_with_expected_sha() {
     let client = fake_with(fixtures);
 
     let request = WriteRequest::SubmitReview {
-        state: gpr::data::models::ReviewState::Approved,
+        state: gprr::data::models::ReviewState::Approved,
         body: "lgtm".into(),
         line_comments: vec![],
         head_sha: "stale".into(),
@@ -172,10 +172,10 @@ async fn write_recovery_stale_head_sha_keeps_pending_with_expected_sha() {
     };
 
     let err = client
-        .submit_review(gpr::data::github::SubmitReviewRequest {
+        .submit_review(gprr::data::github::SubmitReviewRequest {
             id: id.clone(),
             head_sha: "stale".into(),
-            state: gpr::data::models::ReviewState::Approved,
+            state: gprr::data::models::ReviewState::Approved,
             body: "lgtm".into(),
             line_comments: vec![],
         })
@@ -207,7 +207,7 @@ async fn write_recovery_conflict_surfaces_toast_and_keeps_pending() {
     let client = fake_with(fixtures);
 
     let request = WriteRequest::Merge {
-        method: gpr::data::models::MergeMethod::Merge,
+        method: gprr::data::models::MergeMethod::Merge,
         head_sha: "abc".into(),
     };
     let mut state = AppState {
@@ -216,7 +216,7 @@ async fn write_recovery_conflict_surfaces_toast_and_keeps_pending() {
     };
 
     let err = client
-        .merge(&id, gpr::data::models::MergeMethod::Merge, "abc")
+        .merge(&id, gprr::data::models::MergeMethod::Merge, "abc")
         .await
         .unwrap_err();
     let effects = update(

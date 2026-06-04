@@ -17,15 +17,15 @@ use std::sync::{Arc, Mutex};
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use gpr::app::effect::{DataEvent, Effect, WriteRequest};
-use gpr::app::event::AppEvent;
-use gpr::app::state::{AppState, PendingStatus, View};
-use gpr::app::update::update;
-use gpr::data::cache::WriteKind;
-use gpr::data::github::diff_position::DiffPositionIndex;
-use gpr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall, WriteOp};
-use gpr::data::github::{GitHubClient, GitHubError};
-use gpr::data::models::{
+use gprr::app::effect::{DataEvent, Effect, WriteRequest};
+use gprr::app::event::AppEvent;
+use gprr::app::state::{AppState, PendingStatus, View};
+use gprr::app::update::update;
+use gprr::data::cache::WriteKind;
+use gprr::data::github::diff_position::DiffPositionIndex;
+use gprr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall, WriteOp};
+use gprr::data::github::{GitHubClient, GitHubError};
+use gprr::data::models::{
     ChecksRollup, DiffSide, FileDiff, FileStatus, Mergeable, PrDetail, PrFiles, PrId, PrState,
     PrSummary, Repo, ReviewDecision,
 };
@@ -103,7 +103,7 @@ fn diff_state(head_sha: &str) -> (AppState, PrId, String) {
     let id = pr_id();
     let patch = sample_patch();
     let mut state = AppState::default();
-    gpr::app::seed_workspace_from_view(
+    gprr::app::seed_workspace_from_view(
         &mut state,
         View::Diff {
             id: id.clone(),
@@ -216,7 +216,7 @@ async fn line_comment_stale_sha_keeps_pending_write_for_recovery_and_annotation(
     };
     // Dispatcher (production) sets pending_write when it begins executing the
     // effect; reducer-only tests must seed it directly to model that state.
-    state.pending_write = Some(gpr::app::state::PendingWrite {
+    state.pending_write = Some(gprr::app::state::PendingWrite {
         kind: kind.clone(),
         request: request.clone(),
         version_at_submit,

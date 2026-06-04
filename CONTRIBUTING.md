@@ -1,4 +1,4 @@
-# Contributing to gpr
+# Contributing to gprr
 
 Thanks for your interest in contributing! Here's how to get started.
 
@@ -7,7 +7,7 @@ Thanks for your interest in contributing! Here's how to get started.
 1. Fork and clone the repository.
 2. Install a recent [Rust toolchain](https://rustup.rs/) (the crate's minimum
    supported version is pinned in `Cargo.toml` via `rust-version`).
-3. To *run* `gpr` you also need the [`gh` CLI](https://cli.github.com/)
+3. To *run* `gprr` you also need the [`gh` CLI](https://cli.github.com/)
    authenticated with `repo` scope (`gh auth login --scopes repo`) and `git`
    on your `PATH`. The test suite does **not** require either — it runs fully
    offline against recorded fixtures.

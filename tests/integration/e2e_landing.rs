@@ -1,7 +1,7 @@
 use std::process::Command;
 
-use gpr::app::initial_view;
-use gpr::app::state::View;
+use gprr::app::initial_view;
+use gprr::app::state::View;
 use tempfile::tempdir;
 
 #[test]

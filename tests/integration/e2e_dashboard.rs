@@ -12,15 +12,15 @@ use chrono::TimeZone;
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
 
-use gpr::app::App;
-use gpr::app::effect::{DataEvent, Effect};
-use gpr::app::event::AppEvent;
-use gpr::app::update::update;
-use gpr::data::github::fake::FakeFixtures;
-use gpr::data::github::{DashboardBucket, DashboardRequest};
-use gpr::data::models::{ChecksRollup, Mergeable, PrId, PrState, PrSummary, Repo, ReviewDecision};
-use gpr::ui::dashboard::{DashboardState, render_dashboard_state};
-use gpr::ui::theme::Theme;
+use gprr::app::App;
+use gprr::app::effect::{DataEvent, Effect};
+use gprr::app::event::AppEvent;
+use gprr::app::update::update;
+use gprr::data::github::fake::FakeFixtures;
+use gprr::data::github::{DashboardBucket, DashboardRequest};
+use gprr::data::models::{ChecksRollup, Mergeable, PrId, PrState, PrSummary, Repo, ReviewDecision};
+use gprr::ui::dashboard::{DashboardState, render_dashboard_state};
+use gprr::ui::theme::Theme;
 
 use super::harness::fake_with;
 

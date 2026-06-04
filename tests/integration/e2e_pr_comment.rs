@@ -5,14 +5,14 @@
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use gpr::app::effect::{DataEvent, Effect, WriteRequest};
-use gpr::app::event::AppEvent;
-use gpr::app::state::{AppState, DetailTab, View};
-use gpr::app::update::update;
-use gpr::data::cache::WriteKind;
-use gpr::data::github::GitHubClient;
-use gpr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall};
-use gpr::data::models::{
+use gprr::app::effect::{DataEvent, Effect, WriteRequest};
+use gprr::app::event::AppEvent;
+use gprr::app::state::{AppState, DetailTab, View};
+use gprr::app::update::update;
+use gprr::data::cache::WriteKind;
+use gprr::data::github::GitHubClient;
+use gprr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall};
+use gprr::data::models::{
     ChecksRollup, Mergeable, PrDetail, PrId, PrState, PrSummary, Repo, ReviewDecision,
 };
 
@@ -69,7 +69,7 @@ fn key(c: char) -> AppEvent {
 async fn c_opens_composer_submit_routes_to_fake_then_refetches() {
     let id = pr_id();
     let mut state = AppState::default();
-    gpr::app::seed_workspace_from_view(
+    gprr::app::seed_workspace_from_view(
         &mut state,
         View::PrDetail {
             id: id.clone(),

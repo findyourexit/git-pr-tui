@@ -6,14 +6,14 @@
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use gpr::app::effect::{DataEvent, Effect, WriteRequest};
-use gpr::app::event::AppEvent;
-use gpr::app::state::{AppState, DetailTab, View};
-use gpr::app::update::update;
-use gpr::data::cache::{WriteKind, invalidations_for};
-use gpr::data::github::GitHubClient;
-use gpr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall};
-use gpr::data::models::{
+use gprr::app::effect::{DataEvent, Effect, WriteRequest};
+use gprr::app::event::AppEvent;
+use gprr::app::state::{AppState, DetailTab, View};
+use gprr::app::update::update;
+use gprr::data::cache::{WriteKind, invalidations_for};
+use gprr::data::github::GitHubClient;
+use gprr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall};
+use gprr::data::models::{
     ChecksRollup, MergeMethod, Mergeable, PrDetail, PrId, PrState, PrSummary, Repo, ReviewDecision,
 };
 
@@ -71,7 +71,7 @@ async fn m_opens_merge_modal_enter_routes_method_and_head_sha_to_fake_and_invali
     let id = pr_id();
     let head_sha = "abc123def";
     let mut state = AppState::default();
-    gpr::app::seed_workspace_from_view(
+    gprr::app::seed_workspace_from_view(
         &mut state,
         View::PrDetail {
             id: id.clone(),

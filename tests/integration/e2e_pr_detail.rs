@@ -14,19 +14,19 @@ use chrono::TimeZone;
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
 
-use gpr::app::App;
-use gpr::app::effect::{DataEvent, Effect};
-use gpr::app::event::AppEvent;
-use gpr::app::update::update;
-use gpr::data::github::fake::FakeFixtures;
-use gpr::data::models::{
+use gprr::app::App;
+use gprr::app::effect::{DataEvent, Effect};
+use gprr::app::event::AppEvent;
+use gprr::app::update::update;
+use gprr::data::github::fake::FakeFixtures;
+use gprr::data::models::{
     ChecksRollup, FileDiff, FileStatus, Label, Mergeable, PrChecks, PrDetail, PrFiles, PrId,
     PrState, PrSummary, Repo, ReviewDecision, TimelineEvent,
 };
-use gpr::ui::pr_detail::{
+use gprr::ui::pr_detail::{
     ConversationScroll, render_checks, render_commits, render_conversation, render_files,
 };
-use gpr::ui::theme::Theme;
+use gprr::ui::theme::Theme;
 
 use super::harness::fake_with;
 
@@ -125,11 +125,11 @@ async fn pr_detail_landing_fetches_and_absorbs_detail_and_checks() {
     };
     let client = fake_with(fixtures);
     let mut app = App::new(client.clone());
-    gpr::app::seed_workspace_from_view(
+    gprr::app::seed_workspace_from_view(
         &mut app.state,
-        gpr::app::state::View::PrDetail {
+        gprr::app::state::View::PrDetail {
             id: id.clone(),
-            tab: gpr::app::state::DetailTab::Conversation,
+            tab: gprr::app::state::DetailTab::Conversation,
         },
     );
 

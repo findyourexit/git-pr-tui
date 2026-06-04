@@ -62,8 +62,8 @@ pub struct DashboardRequest {
 
 /// Filter applied to a PR list fetch. Each variant corresponds to one entry
 /// in the filter modal. `None` (i.e. `Option::None`)
-/// = no filter, default behavior. The data layer applies these client-side
-/// in v0.1.0; server-side push-down is a v0.2 concern.
+/// = no filter, default behavior. The data layer applies these client-side;
+/// server-side push-down remains a future enhancement.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PrListFilter {
     /// `is:open` — only `PrState::Open`.
@@ -83,8 +83,8 @@ pub enum PrListFilter {
 /// in the sort modal. `None` (i.e. `Option::None`)
 /// = default sort, which matches the GraphQL `pullRequests(orderBy:
 /// UPDATED_AT DESC)` ordering already baked into the query. The data layer
-/// applies these client-side in v0.1.0; server-side push-down via
-/// `orderBy` variables is a v0.2 concern.
+/// applies these client-side; server-side push-down via `orderBy` variables
+/// remains a future enhancement.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PrListSort {
     /// `sort:updated-desc` — most recently updated first.

@@ -6,7 +6,7 @@
 
 #![allow(dead_code)]
 
-use gpr::data::{SharedGitHubClient, fake_client, github::fake::FakeFixtures};
+use gprr::data::{SharedGitHubClient, fake_client, github::fake::FakeFixtures};
 
 pub fn fake_with(fixtures: FakeFixtures) -> SharedGitHubClient {
     fake_client(fixtures)

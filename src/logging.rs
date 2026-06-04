@@ -1,5 +1,5 @@
 //! Tracing subscriber that writes to a rotating file in
-//! `$XDG_DATA_HOME/gpr/log/` and to a bounded in-memory ring (last
+//! `$XDG_DATA_HOME/gprr/log/` and to a bounded in-memory ring (last
 //! [`LOG_RING_CAP`] lines) for the `:log` overlay.
 
 use std::collections::VecDeque;
@@ -78,7 +78,7 @@ pub fn global_ring() -> LogRing {
     GLOBAL_RING.get_or_init(LogRing::new).clone()
 }
 
-/// Resolve the log directory under `$XDG_DATA_HOME/gpr/log/`.
+/// Resolve the log directory under `$XDG_DATA_HOME/gprr/log/`.
 ///
 /// Falls back to `directories::ProjectDirs::data_dir()` on platforms
 /// without an `XDG_DATA_HOME`. Returns `None` when no data directory can
@@ -87,11 +87,11 @@ pub fn global_ring() -> LogRing {
 pub fn log_dir() -> Option<PathBuf> {
     if let Some(xdg) = std::env::var_os("XDG_DATA_HOME") {
         let mut p = PathBuf::from(xdg);
-        p.push("gpr");
+        p.push("gprr");
         p.push("log");
         return Some(p);
     }
-    let proj = directories::ProjectDirs::from("", "", "gpr")?;
+    let proj = directories::ProjectDirs::from("", "", "gprr")?;
     let mut p = proj.data_dir().to_path_buf();
     p.push("log");
     Some(p)
@@ -155,7 +155,7 @@ pub struct LoggingGuard {
 }
 
 /// Install the global tracing subscriber: ring layer + (optional) rolling
-/// daily file appender at `<log_dir>/gpr.log.YYYY-MM-DD`.
+/// daily file appender at `<log_dir>/gprr.log.YYYY-MM-DD`.
 ///
 /// Returns a [`LoggingGuard`] that flushes the file appender on drop, or
 /// `None` if a subscriber was already installed by another call.
@@ -165,7 +165,7 @@ pub fn init_subscriber() -> Option<LoggingGuard> {
 }
 
 /// Like [`init_subscriber`] but uses `default_directive` (e.g. `"debug"` /
-/// `"trace"` from `--debug` / `--trace`) when `GPR_LOG` is unset. `GPR_LOG`
+/// `"trace"` from `--debug` / `--trace`) when `GPRR_LOG` is unset. `GPRR_LOG`
 /// always takes precedence so it can still override the CLI flags.
 #[must_use = "drop the returned guard on shutdown to flush log output"]
 pub fn init_subscriber_with_default(default_directive: &str) -> Option<LoggingGuard> {
@@ -174,12 +174,12 @@ pub fn init_subscriber_with_default(default_directive: &str) -> Option<LoggingGu
     use tracing_subscriber::{EnvFilter, fmt};
 
     let filter =
-        EnvFilter::try_from_env("GPR_LOG").unwrap_or_else(|_| EnvFilter::new(default_directive));
+        EnvFilter::try_from_env("GPRR_LOG").unwrap_or_else(|_| EnvFilter::new(default_directive));
     let ring_layer = RingLayer::new(global_ring());
 
     let (file_layer, guard) = if let Some(dir) = log_dir() {
         if std::fs::create_dir_all(&dir).is_ok() {
-            let appender = tracing_appender::rolling::daily(&dir, "gpr.log");
+            let appender = tracing_appender::rolling::daily(&dir, "gprr.log");
             let (nb, g) = tracing_appender::non_blocking(appender);
             let layer = fmt::layer().with_ansi(false).with_writer(nb);
             (Some(layer), Some(g))
@@ -276,14 +276,14 @@ mod tests {
             .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner);
         let prev = std::env::var_os("XDG_DATA_HOME");
-        set_env("XDG_DATA_HOME", "/tmp/gpr-test-xdg-home");
+        set_env("XDG_DATA_HOME", "/tmp/gprr-test-xdg-home");
         let dir = log_dir().expect("log_dir with XDG set");
         assert!(
-            dir.ends_with("gpr/log"),
-            "expected path ending in gpr/log, got {dir:?}"
+            dir.ends_with("gprr/log"),
+            "expected path ending in gprr/log, got {dir:?}"
         );
         assert!(
-            dir.starts_with("/tmp/gpr-test-xdg-home"),
+            dir.starts_with("/tmp/gprr-test-xdg-home"),
             "expected XDG prefix, got {dir:?}"
         );
         match prev {
@@ -319,7 +319,7 @@ mod tests {
         let _env_guard = ENV_LOCK
             .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner);
-        let tmp = std::env::temp_dir().join(format!("gpr-logtest-{}", std::process::id()));
+        let tmp = std::env::temp_dir().join(format!("gprr-logtest-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&tmp);
         let prev = std::env::var_os("XDG_DATA_HOME");
         set_env("XDG_DATA_HOME", &tmp);

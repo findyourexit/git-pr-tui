@@ -10,7 +10,7 @@ permissions:
 
 env:
   CARGO_TERM_COLOR: always
-  BINARY_NAME: gpr
+  BINARY_NAME: gprr
   # aws-lc-sys (pulled in by the rustls aws-lc-rs provider) assembles its crypto
   # with NASM on Windows MSVC. Use the crate's checked-in prebuilt NASM objects
   # so the Windows runner needs no separate NASM install. Ignored elsewhere.
@@ -133,7 +133,7 @@ jobs:
       - name: Generate Checksums
         run: |
           cd artifacts
-          sha256sum gpr-* > checksums.txt
+          sha256sum gprr-* > checksums.txt
           cat checksums.txt
 
       - name: Create Release
@@ -141,7 +141,7 @@ jobs:
         with:
           body: ${{ steps.changelog.outputs.body }}
           files: |
-            artifacts/gpr-*
+            artifacts/gprr-*
             artifacts/checksums.txt
 
       - name: Promote Changelog
@@ -171,8 +171,8 @@ jobs:
         id: sha
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          SHA_ARM64=$(sha256sum "artifacts/gpr-${VERSION}-aarch64-apple-darwin.tar.gz" | awk '{print $1}')
-          SHA_X86_64=$(sha256sum "artifacts/gpr-${VERSION}-x86_64-apple-darwin.tar.gz" | awk '{print $1}')
+          SHA_ARM64=$(sha256sum "artifacts/gprr-${VERSION}-aarch64-apple-darwin.tar.gz" | awk '{print $1}')
+          SHA_X86_64=$(sha256sum "artifacts/gprr-${VERSION}-x86_64-apple-darwin.tar.gz" | awk '{print $1}')
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "sha_arm64=${SHA_ARM64}" >> "$GITHUB_OUTPUT"
           echo "sha_x86_64=${SHA_X86_64}" >> "$GITHUB_OUTPUT"
@@ -192,49 +192,49 @@ jobs:
 
           mkdir -p homebrew-tap/Formula
 
-          cat > homebrew-tap/Formula/gpr.rb << 'FORMULA'
-          class Gpr < Formula
+          cat > homebrew-tap/Formula/gprr.rb << 'FORMULA'
+          class Gprr < Formula
             desc "Keyboard-driven terminal UI for triaging and reviewing GitHub PRs"
             homepage "https://github.com/findyourexit/git-pr-tui"
             license "MIT"
             version "VERSION_PLACEHOLDER"
 
-            # gpr delegates all GitHub auth to the gh CLI (`gh auth token`).
+            # gprr delegates all GitHub auth to the gh CLI (`gh auth token`).
             depends_on "gh"
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/findyourexit/git-pr-tui/releases/download/vVERSION_PLACEHOLDER/gpr-VERSION_PLACEHOLDER-aarch64-apple-darwin.tar.gz"
+                url "https://github.com/findyourexit/git-pr-tui/releases/download/vVERSION_PLACEHOLDER/gprr-VERSION_PLACEHOLDER-aarch64-apple-darwin.tar.gz"
                 sha256 "SHA_ARM64_PLACEHOLDER"
               else
-                url "https://github.com/findyourexit/git-pr-tui/releases/download/vVERSION_PLACEHOLDER/gpr-VERSION_PLACEHOLDER-x86_64-apple-darwin.tar.gz"
+                url "https://github.com/findyourexit/git-pr-tui/releases/download/vVERSION_PLACEHOLDER/gprr-VERSION_PLACEHOLDER-x86_64-apple-darwin.tar.gz"
                 sha256 "SHA_X86_64_PLACEHOLDER"
               end
             end
 
             def install
-              bin.install "gpr"
+              bin.install "gprr"
             end
 
             test do
-              assert_match "gpr", shell_output("#{bin}/gpr --version")
+              assert_match "gprr", shell_output("#{bin}/gprr --version")
             end
           end
           FORMULA
 
           # Remove leading whitespace from heredoc indentation.
-          sed -i 's/^          //' homebrew-tap/Formula/gpr.rb
+          sed -i 's/^          //' homebrew-tap/Formula/gprr.rb
 
           # Substitute placeholders with actual values.
-          sed -i "s/VERSION_PLACEHOLDER/${VERSION}/g" homebrew-tap/Formula/gpr.rb
-          sed -i "s/SHA_ARM64_PLACEHOLDER/${SHA_ARM64}/g" homebrew-tap/Formula/gpr.rb
-          sed -i "s/SHA_X86_64_PLACEHOLDER/${SHA_X86_64}/g" homebrew-tap/Formula/gpr.rb
+          sed -i "s/VERSION_PLACEHOLDER/${VERSION}/g" homebrew-tap/Formula/gprr.rb
+          sed -i "s/SHA_ARM64_PLACEHOLDER/${SHA_ARM64}/g" homebrew-tap/Formula/gprr.rb
+          sed -i "s/SHA_X86_64_PLACEHOLDER/${SHA_X86_64}/g" homebrew-tap/Formula/gprr.rb
 
       - name: Commit & Push Formula
         run: |
           cd homebrew-tap
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/gpr.rb
-          git commit -m 'chore(release): `gpr` version `${{ steps.sha.outputs.version }}`'
+          git add Formula/gprr.rb
+          git commit -m 'chore(release): `gprr` version `${{ steps.sha.outputs.version }}`'
           git push

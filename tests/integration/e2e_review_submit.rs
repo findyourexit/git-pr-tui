@@ -7,14 +7,14 @@
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use gpr::app::effect::{DataEvent, Effect, WriteRequest};
-use gpr::app::event::AppEvent;
-use gpr::app::state::{AppState, DetailTab, View};
-use gpr::app::update::update;
-use gpr::data::cache::{WriteKind, invalidations_for};
-use gpr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall};
-use gpr::data::github::{GitHubClient, SubmitReviewRequest};
-use gpr::data::models::{
+use gprr::app::effect::{DataEvent, Effect, WriteRequest};
+use gprr::app::event::AppEvent;
+use gprr::app::state::{AppState, DetailTab, View};
+use gprr::app::update::update;
+use gprr::data::cache::{WriteKind, invalidations_for};
+use gprr::data::github::fake::{FakeFixtures, FakeGitHubClient, RecordedCall};
+use gprr::data::github::{GitHubClient, SubmitReviewRequest};
+use gprr::data::models::{
     ChecksRollup, Mergeable, PrDetail, PrId, PrState, PrSummary, Repo, ReviewDecision, ReviewState,
 };
 
@@ -72,7 +72,7 @@ async fn v_opens_modal_submit_routes_head_sha_to_fake_and_invalidates() {
     let id = pr_id();
     let head_sha = "abc123def";
     let mut state = AppState::default();
-    gpr::app::seed_workspace_from_view(
+    gprr::app::seed_workspace_from_view(
         &mut state,
         View::PrDetail {
             id: id.clone(),

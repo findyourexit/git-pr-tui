@@ -5,17 +5,17 @@ use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
 
-use gpr::app::effect::{DataEvent, Effect};
-use gpr::app::event::AppEvent;
-use gpr::app::state::{AppState, DetailTab, View};
-use gpr::app::update::{LARGE_PR_FILE_THRESHOLD, update};
-use gpr::data::github::fake::FakeFixtures;
-use gpr::data::models::{
+use gprr::app::effect::{DataEvent, Effect};
+use gprr::app::event::AppEvent;
+use gprr::app::state::{AppState, DetailTab, View};
+use gprr::app::update::{LARGE_PR_FILE_THRESHOLD, update};
+use gprr::data::github::fake::FakeFixtures;
+use gprr::data::models::{
     ChecksRollup, FileDiff, FileStatus, Mergeable, PrDetail, PrFiles, PrId, PrState, PrSummary,
     Repo, ReviewDecision,
 };
-use gpr::ui::pr_detail::render_files;
-use gpr::ui::theme::Theme;
+use gprr::ui::pr_detail::render_files;
+use gprr::ui::theme::Theme;
 
 use super::harness::fake_with;
 
@@ -83,7 +83,7 @@ fn make_file(file_path: &str, patch: Option<&str>) -> FileDiff {
 
 fn files_tab_state(id: &PrId, detail: PrDetail) -> AppState {
     let mut s = AppState::default();
-    gpr::app::seed_workspace_from_view(
+    gprr::app::seed_workspace_from_view(
         &mut s,
         View::PrDetail {
             id: id.clone(),
@@ -96,7 +96,7 @@ fn files_tab_state(id: &PrId, detail: PrDetail) -> AppState {
 
 async fn absorb_file_diff(
     s: &mut AppState,
-    client: &gpr::data::SharedGitHubClient,
+    client: &gprr::data::SharedGitHubClient,
     id: &PrId,
     head_sha: &str,
     file_path: &str,

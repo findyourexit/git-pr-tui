@@ -180,7 +180,7 @@ impl App {
     ///
     /// Restores the terminal (`disable_raw_mode` + `LeaveAlternateScreen`)
     /// on every exit path. Panic safety is handled separately by
-    /// `gpr::install_panic_hook`.
+    /// `gprr::install_panic_hook`.
     ///
     /// # Errors
     /// Returns the underlying `io::Error` from terminal setup, drawing,

@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest a new feature or improvement for gpr
+description: Suggest a new feature or improvement for gprr
 labels: ["enhancement"]
 body:
   - type: markdown

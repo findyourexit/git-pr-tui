@@ -1,4 +1,4 @@
-//! gpr — TUI for viewing and managing GitHub PRs.
+//! gprr — TUI for viewing and managing GitHub PRs.
 //!
 //! The library crate exists so integration tests can construct
 //! `App` and exercise the reducer + UI without going through `main`.

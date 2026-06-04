@@ -9,7 +9,7 @@
 
 use std::process::Command;
 
-use gpr::data::git::{fetch_pr_and_checkout, is_worktree_dirty};
+use gprr::data::git::{fetch_pr_and_checkout, is_worktree_dirty};
 use tempfile::tempdir;
 
 #[test]

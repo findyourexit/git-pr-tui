@@ -1,4 +1,4 @@
-<h1 align="center">gpr</h1>
+<h1 align="center">gprr</h1>
 
 <p align="center">
   <strong>A keyboard-driven terminal UI for triaging, reviewing, and merging GitHub pull requests — without leaving the shell.</strong>
@@ -12,12 +12,12 @@
 </p>
 
 <p align="center">
-  <img src="assets/demo.gif" alt="gpr — dashboard to diff tour" width="900">
+  <img src="assets/demo.gif" alt="gprr — dashboard to diff tour" width="900">
 </p>
 
-`gpr` is a single, self-contained binary. It reuses your `gh` CLI login, keeps everything in memory, and gets you from "what needs my attention?" to an approved-and-merged PR in a handful of keystrokes.
+`gprr` is a single, self-contained binary. It reuses your `gh` CLI login, keeps everything in memory, and gets you from "what needs my attention?" to an approved-and-merged PR in a handful of keystrokes.
 
-> **Just looking?** Run `gpr --demo` to explore the whole interface offline against built-in sample data — no GitHub account, token, or network required.
+> **Just looking?** Run `gprr --demo` to explore the whole interface offline against built-in sample data — no GitHub account, token, or network required.
 
 ## Features
 
@@ -38,7 +38,7 @@
 
 ```bash
 brew tap findyourexit/tap
-brew install gpr
+brew install gprr
 ```
 
 </details>
@@ -46,7 +46,7 @@ brew install gpr
 <details>
 <summary><strong>Pre-built binaries</strong></summary>
 
-Download the archive for your platform from the [GitHub Releases](https://github.com/findyourexit/git-pr-tui/releases) page, unpack it, and put `gpr` on your `$PATH`.
+Download the archive for your platform from the [GitHub Releases](https://github.com/findyourexit/git-pr-tui/releases) page, unpack it, and put `gprr` on your `$PATH`.
 
 Archives are published for:
 - macOS (Apple Silicon and Intel)
@@ -62,15 +62,15 @@ Each release includes a `checksums.txt` for verification.
 
 ```bash
 # Install the latest from git
-cargo install --git https://github.com/findyourexit/git-pr-tui --locked --bin gpr
+cargo install --git https://github.com/findyourexit/git-pr-tui --locked --bin gprr
 
 # …or build a local checkout
 git clone https://github.com/findyourexit/git-pr-tui.git
 cd git-pr-tui
-cargo build --release   # binary at target/release/gpr
+cargo build --release   # binary at target/release/gprr
 ```
 
-`gpr` is **not** on crates.io yet — install via Homebrew, a release archive, or git.
+`gprr` is **not** on crates.io yet — install via Homebrew, a release archive, or git.
 
 </details>
 
@@ -82,24 +82,24 @@ cargo build --release   # binary at target/release/gpr
   gh auth login --scopes repo
   ```
 
-  `gpr` calls `gh auth token` for every GitHub API request. There is no native OAuth and no `GITHUB_TOKEN` fallback. (The Homebrew formula installs `gh` for you.)
+  `gprr` calls `gh auth token` for every GitHub API request. There is no native OAuth and no `GITHUB_TOKEN` fallback. (The Homebrew formula installs `gh` for you.)
 - **`git`** on your `$PATH` (used by the `C` branch-checkout flow).
 
 ### Run it
 
 ```bash
 # Outside a repo → the cross-repo dashboard
-gpr
+gprr
 
 # Inside a git repo with a github.com remote → that repo's PR list
-cd ~/code/my-project && gpr
+cd ~/code/my-project && gprr
 
 # A specific repo, or a specific PR
-gpr owner/name
-gpr --pr 128 owner/name
+gprr owner/name
+gprr --pr 128 owner/name
 
 # Explore the UI offline, no auth required
-gpr --demo
+gprr --demo
 ```
 
 Press `?` anywhere for the context-aware key overlay, and `:` for the command palette.
@@ -207,7 +207,7 @@ In the **Files** sub-tab, `h` / `l` move between the file tree and the diff pane
 
 ## Config
 
-`gpr` reads `~/.config/gpr/config.toml` (or `$XDG_CONFIG_HOME/gpr/config.toml`). The file is written with defaults on first launch if absent.
+`gprr` reads `~/.config/gprr/config.toml` (or `$XDG_CONFIG_HOME/gprr/config.toml`). The file is written with defaults on first launch if absent.
 
 ```toml
 [ui]
@@ -233,7 +233,7 @@ pr_detail = 30
 # refresh = "F5"
 ```
 
-Logs are written to `$XDG_DATA_HOME/gpr/log/gpr.log.YYYY-MM-DD` (rolling daily). The last 200 lines are also visible in-app via `:log`. Set `GPR_LOG=debug` (or pass `--debug` / `--trace`) to widen verbosity; `GPR_LOG` takes precedence over the flags.
+Logs are written to `$XDG_DATA_HOME/gprr/log/gprr.log.YYYY-MM-DD` (rolling daily). The last 200 lines are also visible in-app via `:log`. Set `GPRR_LOG=debug` (or pass `--debug` / `--trace`) to widen verbosity; `GPRR_LOG` takes precedence over the flags.
 
 ## Troubleshooting
 
@@ -243,9 +243,9 @@ Logs are written to `$XDG_DATA_HOME/gpr/log/gpr.log.YYYY-MM-DD` (rolling daily).
 - **Terminal smaller than 60×18** — modals fall back to full-screen. Resize larger for the standard overlay layout.
 - **PR branch checkout refused** — `C` refuses to overwrite a dirty worktree. Commit or stash first.
 
-## Non-goals (v0.1.0)
+## Non-goals (v0.2.0)
 
-`gpr` deliberately omits the following:
+`gprr` deliberately omits the following:
 
 - GitHub Enterprise Server
 - Editing PR title/body, reviewers/labels/assignees
@@ -264,25 +264,25 @@ Releases are driven by tags. Pushing a `v*` tag runs [`.github/workflows/release
 1. cross-compiles release binaries for macOS (arm64/x86_64), Linux (`x86_64`/`aarch64`), and Windows (`x86_64`);
 2. packages archives + `checksums.txt` and publishes a GitHub Release whose notes are taken from the `[Unreleased]` section of [`CHANGELOG.md`](CHANGELOG.md);
 3. promotes that changelog section to the new version; and
-4. updates the `gpr` formula in the [`findyourexit/homebrew-tap`](https://github.com/findyourexit/homebrew-tap) tap (requires a `HOMEBREW_TAP_TOKEN` repository secret).
+4. updates the `gprr` formula in the [`findyourexit/homebrew-tap`](https://github.com/findyourexit/homebrew-tap) tap (requires a `HOMEBREW_TAP_TOKEN` repository secret).
 
 ```bash
 # 1. Land your changes under "## [Unreleased]" in CHANGELOG.md
 # 2. Bump the version in Cargo.toml, then tag and push
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 Linux targets are built with [`cross`](https://github.com/cross-rs/cross); see [`Cross.toml`](Cross.toml) for the container setup (it provisions CMake so the `aws-lc-rs` crypto backend compiles).
 
 ## Recording demo assets (maintainer only)
 
-The README GIFs are produced with [`vhs`](https://github.com/charmbracelet/vhs) from the tapes in [`tapes/`](tapes/), recorded against `gpr --demo` so they are deterministic and contain no real GitHub data.
+The README GIFs are produced with [`vhs`](https://github.com/charmbracelet/vhs) from the tapes in [`tapes/`](tapes/), recorded against `gprr --demo` so they are deterministic and contain no real GitHub data.
 
 ```bash
 brew install vhs                       # also pulls ttyd + ffmpeg
-cargo build --release                  # the tapes expect ./gpr on $PATH
-cp target/release/gpr /tmp/gpr-demo/   # (tapes set a clean XDG/PATH env)
+cargo build --release                  # the tapes expect ./gprr on $PATH
+cp target/release/gprr /tmp/gprr-demo/   # (tapes set a clean XDG/PATH env)
 vhs tapes/demo.tape                     # → assets/demo.gif
 vhs tapes/demo-dashboard.tape
 vhs tapes/demo-review.tape
@@ -301,9 +301,9 @@ Override the source repo or PR via env vars:
 
 | Env var | Default | Purpose |
 |---|---|---|
-| `GPR_FIXTURE_REPO` | `cli/cli` | `owner/name` of the source repo |
-| `GPR_FIXTURE_PR` | `1` | PR number to capture (use one with reviews + checks) |
-| `GPR_FIXTURE_DIR` | `tests/fixtures/api` | Output directory |
+| `GPRR_FIXTURE_REPO` | `cli/cli` | `owner/name` of the source repo |
+| `GPRR_FIXTURE_PR` | `1` | PR number to capture (use one with reviews + checks) |
+| `GPRR_FIXTURE_DIR` | `tests/fixtures/api` | Output directory |
 
 Commit the regenerated fixtures in a dedicated commit so the diff review stays focused.
 

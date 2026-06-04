@@ -11,15 +11,15 @@
 use std::sync::Arc;
 use std::time::Duration;
 
-use gpr::app::effect::{DataEvent, Effect};
-use gpr::app::event::AppEvent;
-use gpr::app::executor::execute_effect;
-use gpr::app::state::{AppState, DetailTab, View};
-use gpr::app::update::{refetch_effects, update};
-use gpr::data::SharedGitHubClient;
-use gpr::data::cache::WriteKind;
-use gpr::data::github::fake::{FakeFixtures, FakeGitHubClient};
-use gpr::data::models::{
+use gprr::app::effect::{DataEvent, Effect};
+use gprr::app::event::AppEvent;
+use gprr::app::executor::execute_effect;
+use gprr::app::state::{AppState, DetailTab, View};
+use gprr::app::update::{refetch_effects, update};
+use gprr::data::SharedGitHubClient;
+use gprr::data::cache::WriteKind;
+use gprr::data::github::fake::{FakeFixtures, FakeGitHubClient};
+use gprr::data::models::{
     ChecksRollup, Mergeable, PrDetail, PrId, PrState, PrSummary, Repo, ReviewDecision,
 };
 use tokio::sync::mpsc::unbounded_channel;
@@ -80,7 +80,7 @@ async fn successful_write_refetches_pr_detail_through_the_full_loop() {
     let (tx, mut rx) = unbounded_channel();
 
     let mut state = AppState::default();
-    gpr::app::seed_workspace_from_view(
+    gprr::app::seed_workspace_from_view(
         &mut state,
         View::PrDetail {
             id: id.clone(),

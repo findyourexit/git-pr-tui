@@ -1,4 +1,4 @@
-//! Verifies that the panic hook installed by `gpr::install_panic_hook` calls
+//! Verifies that the panic hook installed by `gprr::install_panic_hook` calls
 //! the terminal-restore callback before propagating the panic.
 
 use std::sync::{Arc, Mutex};
@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 fn panic_hook_calls_restore_then_propagates() {
     let restored = Arc::new(Mutex::new(false));
     let r2 = restored.clone();
-    gpr::install_panic_hook(Box::new(move || {
+    gprr::install_panic_hook(Box::new(move || {
         *r2.lock().unwrap() = true;
     }));
 

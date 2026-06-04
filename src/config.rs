@@ -3,8 +3,8 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
-/// User-overridable configuration for `gpr`. Loaded from
-/// `$XDG_CONFIG_HOME/gpr/config.toml` (default) or `--config <PATH>`.
+/// User-overridable configuration for `gprr`. Loaded from
+/// `$XDG_CONFIG_HOME/gprr/config.toml` (default) or `--config <PATH>`.
 ///
 /// The defaults are *also* what gets written on first run.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize, Serialize)]
@@ -69,7 +69,7 @@ impl Default for RefreshConfig {
 
 impl ConfigFile {
     /// Load config from `override_path` if `Some`, otherwise from
-    /// `$XDG_CONFIG_HOME/gpr/config.toml` (creating it with defaults if
+    /// `$XDG_CONFIG_HOME/gprr/config.toml` (creating it with defaults if
     /// it does not exist). Returns `default()` on any read/parse error.
     #[must_use]
     pub fn load(override_path: Option<&Path>) -> Self {
@@ -93,20 +93,20 @@ impl ConfigFile {
 
 fn default_config_path() -> PathBuf {
     if let Some(xdg) = std::env::var_os("XDG_CONFIG_HOME") {
-        return PathBuf::from(xdg).join("gpr").join("config.toml");
+        return PathBuf::from(xdg).join("gprr").join("config.toml");
     }
     if let Some(home) = std::env::var_os("HOME") {
         return PathBuf::from(home)
             .join(".config")
-            .join("gpr")
+            .join("gprr")
             .join("config.toml");
     }
     // No `XDG_CONFIG_HOME` or `HOME` (typically Windows): fall back to the
     // platform's native config directory, mirroring `logging::log_dir`.
-    if let Some(proj) = directories::ProjectDirs::from("", "", "gpr") {
+    if let Some(proj) = directories::ProjectDirs::from("", "", "gprr") {
         return proj.config_dir().join("config.toml");
     }
-    PathBuf::from(".").join("gpr").join("config.toml")
+    PathBuf::from(".").join("gprr").join("config.toml")
 }
 
 fn write_default(path: &Path) -> std::io::Result<()> {
@@ -146,7 +146,7 @@ mod tests {
             std::env::set_var("XDG_CONFIG_HOME", dir.path());
         }
 
-        let path = dir.path().join("gpr").join("config.toml");
+        let path = dir.path().join("gprr").join("config.toml");
         assert!(!path.exists(), "precondition: not written yet");
 
         let cfg = ConfigFile::load(None);

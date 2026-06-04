@@ -3,19 +3,19 @@ use std::sync::Arc;
 
 use clap::Parser;
 use crossterm::ExecutableCommand;
-use gpr::app::App;
-use gpr::cli::Cli;
-use gpr::data::SharedGitHubClient;
-use gpr::data::auth_probe::{GhTokenFetcher, ProbeOutcome, probe};
-use gpr::data::github::octocrab_impl::{OctocrabConfig, OctocrabGitHubClient};
-use gpr::data::github::{GitHubClient, GitHubError};
-use gpr::install_panic_hook;
+use gprr::app::App;
+use gprr::cli::Cli;
+use gprr::data::SharedGitHubClient;
+use gprr::data::auth_probe::{GhTokenFetcher, ProbeOutcome, probe};
+use gprr::data::github::octocrab_impl::{OctocrabConfig, OctocrabGitHubClient};
+use gprr::data::github::{GitHubClient, GitHubError};
+use gprr::install_panic_hook;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
     let cli = Cli::parse();
 
-    // `--trace` / `--debug` set the default log level; `GPR_LOG` still overrides.
+    // `--trace` / `--debug` set the default log level; `GPRR_LOG` still overrides.
     let log_default = if cli.trace {
         "trace"
     } else if cli.debug {
@@ -26,12 +26,12 @@ async fn main() -> io::Result<()> {
     // Bind to a named variable (NOT `_`) so the file-appender's WorkerGuard
     // lives for the full process lifetime. `_` would drop immediately,
     // silently disabling the log file.
-    let _log_guard = gpr::logging::init_subscriber_with_default(log_default);
+    let _log_guard = gprr::logging::init_subscriber_with_default(log_default);
 
     // `--demo` runs the whole TUI against in-memory sample data, skipping the
     // `gh` auth probe and every network call.
     let client: SharedGitHubClient = if cli.demo {
-        gpr::demo::demo_client()
+        gprr::demo::demo_client()
     } else {
         let outcome = probe(&GhTokenFetcher, |token| async move {
             let client = OctocrabGitHubClient::with_token(token, OctocrabConfig::default())
@@ -61,30 +61,30 @@ async fn main() -> io::Result<()> {
         let _ = std::io::stdout().execute(crossterm::terminal::LeaveAlternateScreen);
     }));
     let cwd = std::env::current_dir().unwrap_or_else(|_| std::path::PathBuf::from("."));
-    let config = gpr::config::ConfigFile::load(cli.config.as_deref());
+    let config = gprr::config::ConfigFile::load(cli.config.as_deref());
     let mut app = App::with_cwd_and_config(client, &cwd, cli.config.as_deref());
 
     // Apply CLI landing overrides (`--dashboard`, `owner/name`, `--pr`).
-    // In demo mode, ignore the cwd-derived repo so a bare `gpr --demo` always
+    // In demo mode, ignore the cwd-derived repo so a bare `gprr --demo` always
     // lands on the populated sample dashboard (even when launched inside an
     // unrelated git repo). An explicit `owner/name`, `--pr`, or `--dashboard`
     // still wins via `cli_landing`.
     let cwd_view = if cli.demo {
-        gpr::app::state::View::Dashboard
+        gprr::app::state::View::Dashboard
     } else {
         app.state.current_view()
     };
-    let view = gpr::app::cli_landing(cwd_view, cli.dashboard, cli.repo.map(Into::into), cli.pr);
-    gpr::app::seed_workspace_from_view(&mut app.state, view);
+    let view = gprr::app::cli_landing(cwd_view, cli.dashboard, cli.repo.map(Into::into), cli.pr);
+    gprr::app::seed_workspace_from_view(&mut app.state, view);
 
     // `--no-color` / `NO_COLOR` defer all colors to the terminal defaults,
     // overriding the config theme.
     if cli.no_color || std::env::var_os("NO_COLOR").is_some() {
-        app.theme = gpr::ui::theme::Theme::no_color();
-        app.state.animations = gpr::app::anim::AnimationIntensity::Off;
+        app.theme = gprr::ui::theme::Theme::no_color();
+        app.state.animations = gprr::app::anim::AnimationIntensity::Off;
     } else {
         app.state.animations =
-            gpr::app::anim::AnimationIntensity::from_config_str(&config.ui.animations);
+            gprr::app::anim::AnimationIntensity::from_config_str(&config.ui.animations);
     }
 
     app.run().await

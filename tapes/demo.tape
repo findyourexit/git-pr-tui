@@ -1,5 +1,5 @@
-# gpr — headline tour: dashboard → PR detail → diff → checks → help.
-# Recorded against `gpr --demo` (offline sample data, no token/network).
+# gprr — headline tour: dashboard → PR detail → diff → checks → help.
+# Recorded against `gprr --demo` (offline sample data, no token/network).
 Output "assets/demo.gif"
 
 Set Shell "bash"
@@ -11,11 +11,11 @@ Set Theme "Catppuccin Mocha"
 Set TypingSpeed 75ms
 
 Hide
-Type "export PS1='$ '; export XDG_CONFIG_HOME=/tmp/gpr-demo/cfg; export XDG_DATA_HOME=/tmp/gpr-demo/data; export PATH=/tmp/gpr-demo:$PATH; cd /tmp/gpr-demo; clear"
+Type "export PS1='$ '; export XDG_CONFIG_HOME=/tmp/gprr-demo/cfg; export XDG_DATA_HOME=/tmp/gprr-demo/data; export PATH=/tmp/gprr-demo:$PATH; cd /tmp/gprr-demo; clear"
 Enter
 Show
 
-Type "gpr --demo"
+Type "gprr --demo"
 Sleep 600ms
 Enter
 Sleep 3s

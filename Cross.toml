@@ -1,6 +1,6 @@
 # cross-rs configuration used by the release workflow's Linux cross-compiles.
 #
-# gpr unifies its TLS/crypto stack on aws-lc-rs (see Cargo.toml). The underlying
+# gprr unifies its TLS/crypto stack on aws-lc-rs (see Cargo.toml). The underlying
 # aws-lc-sys crate compiles its C sources with CMake, which is not present in the
 # default `cross` build images. Install it in the build container before each
 # target build so the cross-compiled Linux binaries link successfully.

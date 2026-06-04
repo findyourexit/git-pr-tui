@@ -1,6 +1,6 @@
 //! Offline demo data.
 //!
-//! `gpr --demo` runs the full TUI against an in-memory [`FakeGitHubClient`]
+//! `gprr --demo` runs the full TUI against an in-memory [`FakeGitHubClient`]
 //! seeded with the fixtures below, so the interface can be explored (and
 //! recorded) without a GitHub token or any network access. The data is
 //! fictional but shaped to exercise every view: a cross-repo dashboard, a

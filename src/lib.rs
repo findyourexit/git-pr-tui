@@ -7,6 +7,7 @@ pub mod app;
 pub mod cli;
 pub mod config;
 pub mod data;
+pub mod demo;
 pub mod error;
 pub mod logging;
 pub mod ui;

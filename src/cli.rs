@@ -41,6 +41,11 @@ pub struct Cli {
     /// Override the config file location (default: `$XDG_CONFIG_HOME/gpr/config.toml`).
     #[arg(long, value_name = "PATH")]
     pub config: Option<PathBuf>,
+
+    /// Explore the full TUI offline against built-in sample data — no `gh`
+    /// token or network required. Forces the dashboard landing view.
+    #[arg(long)]
+    pub demo: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

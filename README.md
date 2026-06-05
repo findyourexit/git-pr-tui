@@ -257,55 +257,11 @@ Logs are written to `$XDG_DATA_HOME/gprr/log/gprr.log.YYYY-MM-DD` (rolling daily
 - crates.io publish
 - Notifications inbox
 
-## Releasing (maintainer only)
+## Contributing
 
-Releases are driven by tags. Pushing a `v*` tag runs [`.github/workflows/release.yml`](.github/workflows/release.yml), which:
-
-1. cross-compiles release binaries for macOS (arm64/x86_64), Linux (`x86_64`/`aarch64`), and Windows (`x86_64`);
-2. packages archives + `checksums.txt` and publishes a GitHub Release whose notes are taken from the `[Unreleased]` section of [`CHANGELOG.md`](CHANGELOG.md);
-3. promotes that changelog section to the new version; and
-4. updates the `gprr` formula in the [`findyourexit/homebrew-tap`](https://github.com/findyourexit/homebrew-tap) tap (requires a `HOMEBREW_TAP_TOKEN` repository secret).
-
-```bash
-# 1. Land your changes under "## [Unreleased]" in CHANGELOG.md
-# 2. Bump the version in Cargo.toml, then tag and push
-git tag v0.2.0
-git push origin v0.2.0
-```
-
-Linux targets are built with [`cross`](https://github.com/cross-rs/cross); see [`Cross.toml`](Cross.toml) for the container setup (it provisions CMake so the `aws-lc-rs` crypto backend compiles).
-
-## Recording demo assets (maintainer only)
-
-The README GIFs are produced with [`vhs`](https://github.com/charmbracelet/vhs) from the tapes in [`tapes/`](tapes/), recorded against `gprr --demo` so they are deterministic and contain no real GitHub data.
-
-```bash
-brew install vhs                       # also pulls ttyd + ffmpeg
-cargo build --release                  # the tapes expect ./gprr on $PATH
-cp target/release/gprr /tmp/gprr-demo/   # (tapes set a clean XDG/PATH env)
-vhs tapes/demo.tape                     # → assets/demo.gif
-vhs tapes/demo-dashboard.tape
-vhs tapes/demo-review.tape
-```
-
-## Recording API fixtures (maintainer only)
-
-Test fixtures under `tests/fixtures/api/` capture live GitHub API responses so the integration suite can run without network access. CI never re-records — only maintainers run the script manually after the GitHub API shape changes or when a captured fixture grows stale.
-
-```bash
-gh auth login --scopes repo          # one-time
-scripts/record_fixtures.sh           # captures against cli/cli#1 by default
-```
-
-Override the source repo or PR via env vars:
-
-| Env var | Default | Purpose |
-|---|---|---|
-| `GPRR_FIXTURE_REPO` | `cli/cli` | `owner/name` of the source repo |
-| `GPRR_FIXTURE_PR` | `1` | PR number to capture (use one with reviews + checks) |
-| `GPRR_FIXTURE_DIR` | `tests/fixtures/api` | Output directory |
-
-Commit the regenerated fixtures in a dedicated commit so the diff review stays focused.
+Developer and maintainer documentation — building from source, the release
+process, and how to regenerate demo GIFs and API fixtures — lives in
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 
